@@ -1,45 +1,42 @@
+#include "matrix_lib.hpp"
 #include <algorithm>
-#include <iostream>
-#include <vector>
 using std::vector;
 
 static const double EPSILON = 1e-6;
 
-class Matrix {
-public:
-    Matrix(size_t size, std::vector<std::vector<double>> matrix): size_(size) {
+    Matrix::Matrix(size_t size, std::vector<std::vector<double>> matrix): size_(size) {
         for (int i = 0; i < size; ++i) {
             matrix_[i] = matrix[i];
         }
     }
 
-    Matrix(size_t size): size_(size), matrix_(size, vector<double>(size, 0)) {
+    Matrix::Matrix(size_t size): size_(size), matrix_(size, vector<double>(size, 0)) {
 
     }
 
-    Matrix(): size_(0){}
-    Matrix(const Matrix& other): size_(other.size_), matrix_(other.matrix_) {
+    Matrix::Matrix(): size_(0){}
+    Matrix::Matrix(const Matrix& other): size_(other.size_), matrix_(other.matrix_) {
     }
-    Matrix(Matrix&& other): size_(other.size_) {
+    Matrix::Matrix(Matrix&& other): size_(other.size_) {
         matrix_ = std::move(other.matrix_);
     }
 
-    Matrix& operator=(const Matrix& other) {
+    Matrix& Matrix::operator=(const Matrix& other) {
         size_ = other.size_;
         matrix_ = other.matrix_;
         return *this;
     }
-    Matrix& operator=(Matrix&& other) {
+    Matrix& Matrix::operator=(Matrix&& other) {
         matrix_ = std::move(other.matrix_);
         size_ = other.size_;
         return *this;
     }
 
-    size_t Size() const {
+    size_t Matrix::Size() const {
         return size_;
     }
 
-    double Det() {
+    double Matrix::Det() {
         vector<vector<double>> tmp_matrix = matrix_;
         double det = 1;
         for (size_t i = 0; i < size_; ++i) {
@@ -72,7 +69,7 @@ public:
         return det;
     }
 
-    Matrix GetMaxDetMatrix() {
+    Matrix Matrix::GetMaxDetMatrix() {
         Matrix tmp_matrix(size_);
         Matrix max_det_matrix;
         double max_det = this->Det();
@@ -114,13 +111,6 @@ public:
         } while(std::next_permutation(matrix_even_place.begin(), matrix_even_place.end()));
         return std::move(max_det_matrix);
     }
-
-private:
-    size_t size_;
-    vector<vector<double>> matrix_;
-    friend std::ostream& operator<< (std::ostream &out, const Matrix &matrix);
-    friend std::istream& operator>> (std::istream &in, Matrix &matrix);
-};
 
 std::ostream& operator<< (std::ostream &out, const Matrix &matrix) {
     for (int i = 0; i < matrix.Size(); ++i) {

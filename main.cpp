@@ -1,4 +1,4 @@
-#include "lib/lib.hpp"
+#include "lib/matrix_lib.hpp"
 
 int main() {
     Matrix matrix(3);
